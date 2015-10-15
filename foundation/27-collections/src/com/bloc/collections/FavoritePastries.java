@@ -25,11 +25,13 @@ public class FavoritePastries {
 	 *	between rating and pastry: HashMap<Integer, List<Pastry>>
 	/************************************************/
 
+	public Map<Integer, List<Pastry>> favoritePastries;
 
 	public FavoritePastries() {
 		/************************************************
  	 	 *	WORK HERE
 		/************************************************/
+		favoritePastries = new HashMap<>();
 	}
 
 	/* 
@@ -51,6 +53,28 @@ public class FavoritePastries {
 		/************************************************
  	 	 *	WORK HERE
 		/************************************************/
+
+		// remove pastry if it's in a list with a different rating
+		for (Map.Entry<Integer, List<Pastry>> entry : favoritePastries.entrySet()){
+			if (entry.getValue().contains(pastry) && (!entry.getKey().equals(rating))){
+				entry.getValue().remove(pastry);
+			}
+		}
+
+		if (favoritePastries.containsKey(rating)){
+
+			List<Pastry> pastryList = favoritePastries.get(rating);
+			if (!pastryList.contains(pastry)){
+				pastryList.add(pastry);
+				favoritePastries.put(rating, pastryList);
+			}
+
+		} else {
+
+			List<Pastry> newPastryList = new ArrayList();
+			newPastryList.add(pastry);
+			favoritePastries.put(rating, newPastryList);
+		}
 	}
 
 	/* 
@@ -69,6 +93,19 @@ public class FavoritePastries {
 		/************************************************
  	 	 *	WORK HERE, you must modify the return value
 		/************************************************/
+		
+		Iterator it = favoritePastries.entrySet().iterator();
+		while(it.hasNext()){
+			Map.Entry pair = (Map.Entry)it.next();
+			List<Pastry> pastryList = (List<Pastry>)pair.getValue();
+			if (pastryList.contains(pastry)){
+				pastryList.remove(pastry);
+				if (pastryList.isEmpty()){
+					favoritePastries.remove(pastryList);
+				}
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -90,6 +127,13 @@ public class FavoritePastries {
 		/************************************************
  	 	 *	WORK HERE, you must modify the return value
 		/************************************************/
+		
+		for (Map.Entry<Integer, List<Pastry>> entry : favoritePastries.entrySet()){
+			if (entry.getValue().contains(pastry)){
+				return entry.getKey();
+			}
+		}
+
 		return -1;
 	}
 
@@ -113,7 +157,13 @@ public class FavoritePastries {
 		/************************************************
  	 	 *	WORK HERE, you must modify the return value
 		/************************************************/
-		return null;
+		for (Integer key : favoritePastries.keySet()) {
+			if (key.equals(rating)){
+				return favoritePastries.get(key);
+			}
+		}
+
+		return Collections.emptySet();
 	}
 
 }
